@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"./api"
+	"mypkg/api"
 )
 
 func main() {
