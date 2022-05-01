@@ -25,7 +25,7 @@ month|number|ture|一覧表示する日記の作成月
       diaryId:"日記ID",
       title: "日記タイトル",
       writerId: "日記作者ID",
-      writerName:  "日記作者名前,
+      writerName:  "日記作者名前",
       description: "日記の説明",
       thumbnailInfo:[
         thumbnailId: "サムネイル ID",
