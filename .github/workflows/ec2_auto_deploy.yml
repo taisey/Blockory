@@ -18,7 +18,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   
-  pull:
+  Deploy:
     runs-on: ubuntu-latest
     steps:
       #IP取得ライブラリをインストール
@@ -29,7 +29,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      #deploy
       - name: Pull
         run: |
          # SSH接続して、git pullする
@@ -37,19 +36,11 @@ jobs:
          chmod 600 private_key
          ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "cd ~/Blockory && git fetch --prune && git checkout main && git pull origin main"
          
-  build:
-    runs-on: ubuntu-latest
-    needs: pull
-    steps:
       - name: build
         run: |
           ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "cd ~/Blockory/backend/src/build && bash build.sh"
           
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: deploy
+      - name: exec
         run: |
           ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "sudo systemctl restart Blockory.service"
   
