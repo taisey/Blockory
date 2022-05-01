@@ -1,20 +1,31 @@
 ## 各APIの使用
 
-### 日記情報一覧表示（一か月分） POST AllDiaryInfoMonth/
-日記情報を一月分取得するAPI
+### 日記情報一覧表示　GET DiaryInfo/{year, month, day}
+日記情報を取得するAPI
+
+与えられたクエリによって取得する期間がかわる
+- year = 2022 ：2022年内の日記を全て取得
+- year = 2022, month = 2：2022年2月内の日記を全て取得
+- year = 2022, month = 2, day = 3：2022年2月3日内の日記を全て取得
 
 **リクエスト**
 ```
  {
-   year: 2022
-   month: 2
+   year: 2022,
+   month: 2,
+   day: 3
  }
+ ```
+
+ ```
+ GET AllDiaryInfoMonth/?year=2022&month=2?day=3
  ```
  
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
 year|number|true|一覧表示する日記の作成年
-month|number|ture|一覧表示する日記の作成月
+month|number|false|一覧表示する日記の作成月
+day|number|false|一覧表示する日記の作成日
 
 **レスポンス200応答**
 ```
@@ -47,4 +58,31 @@ writerName | string | true | 日記作者名前
 description | string | true | 日記の説明
 thubnailInfo | サムネイル情報配列 | true | サムネイル情報
 thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
+
+### 日記情報登録 POST /DiaryInfo
+日記情報を保存するAPI
+
+**リクエスト**
+```
+{
+  diaryCount: 1,
+  items:[
+    {
+      title: "日記タイトル",
+      description: "日記の説明",
+      thumbnailBody: "サムネイル本体"
+    }
+  ]
+}
+```
+
+日記情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+title | string | true | 日記タイトル
+description | string | true | 日記の説明
+thubnailInfo | サムネイル情報配列 | true | サムネイル情報
+thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
+
+
 
