@@ -1,6 +1,6 @@
 ## 各APIの使用
 
-### 日記情報一覧表示（一か月分） POST AllDiaryinfoMonth/
+### 日記情報一覧表示（一か月分） POST AllDiaryInfoMonth/
 日記情報を一月分取得するAPI
 
 **リクエスト**
