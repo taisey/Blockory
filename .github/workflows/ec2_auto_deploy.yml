@@ -42,7 +42,7 @@ jobs:
           
       - name: exec
         run: |
-          ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "sudo systemctl restart Blockory.service"
+          ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "sudo systemctl restart Blockory.service && sudo systemctl daemon-reload"
   
   
   
