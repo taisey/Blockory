@@ -6,8 +6,8 @@
 **リクエスト**
 ```
  {
-   year: "yyyy"
-   month: "mm"
+   year: 2022
+   month: 2
  }
  ```
  
@@ -19,7 +19,7 @@ month|number|ture|一覧表示する日記の作成月
 **レスポンス200応答**
 ```
 {
-  diaryCount: "取得した日記の数",
+  diaryCount: 1,
   items:[
     {
       diaryId:"日記ID",
@@ -27,9 +27,7 @@ month|number|ture|一覧表示する日記の作成月
       writerId: "日記作者ID",
       writerName:  "日記作者名前",
       description: "日記の説明",
-      thumbnailInfo:[
-        thumbnailId: "サムネイル ID",
-        thumbnailBody: "サムネイル本体"
+      thumbnailBody: "サムネイル本体"
     }
   ]
 }
@@ -48,9 +46,5 @@ writerId | string | true | 日記作者ID
 writerName | string | true | 日記作者名前
 description | string | true | 日記の説明
 thubnailInfo | サムネイル情報配列 | true | サムネイル情報
-
-サムネイル情報：
-フィールド名 | 型 | 必須 | 説明
--- | -- | -- | --
-thumbnailId | string | true | サムネイルのID
 thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
+
