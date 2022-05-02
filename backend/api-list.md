@@ -1,4 +1,4 @@
-## 各APIの使用
+## 各APIの仕様
 
 ### 日記情報一覧表示　GET DiaryInfo/{year, month, day}
 日記情報を取得するAPI
