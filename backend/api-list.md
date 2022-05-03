@@ -1,6 +1,13 @@
+## API一覧
+説明|メゾット|エンドポイント
+ -- | -- | -- 
+日記情報一覧取得 |GET|DiaryInfo/{year, month, day}
+日記情報登録 |POST |DiaryInfo
+ユーザー情報取得 |GET|USerInfo
+
 ## 各APIの仕様
 
-### 日記情報一覧表示　GET DiaryInfo/{year, month, day}
+### 日記情報一覧取得　GET DiaryInfo/{year, month, day}
 日記情報を取得するAPI
 
 与えられたクエリによって取得する期間が変化
@@ -39,6 +46,7 @@ day|number|false|一覧表示する日記の作成日
       writerName:  "日記作者名前",
       description: "日記の説明",
       thumbnailBody: "サムネイル本体"
+      date:"yyyy-mm-dd"
     }
   ]
 }
@@ -58,9 +66,11 @@ writerName | string | true | 日記作者名前
 description | string | true | 日記の説明
 thubnailInfo | サムネイル情報配列 | true | サムネイル情報
 thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
+date | date | 日記の日付
 
 ### 日記情報登録 POST /DiaryInfo
 日記情報を保存するAPI
+>セキュリティの観点から、クライアント側から送られてきたuserIdは使わず、代わりにsessionIdを利用する
 
 **リクエスト**
 ```
@@ -84,5 +94,17 @@ description | string | true | 日記の説明
 thubnailInfo | サムネイル情報配列 | true | サムネイル情報
 thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
 
+### ユーザー情報取得 GET /UserInfo
+ユーザ情報を取得するAPI
+>セキュリティの観点から、クライアント側から送られてきたuserIdは使わず、代わりにsessionIdを利用する
 
+**リクエスト**
+```
+ {
+ }
+ ```
+ **レスポンス**
+ ```
+ 
+ ```
 
