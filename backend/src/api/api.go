@@ -1,11 +1,13 @@
 package api
 
 import (
-	"log"
 	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
 //root-handle
-func RootHandle(w http.ResponseWriter, r *http.Request) {
-	log.Println("RootHandle active!!")
+func RootHandle(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "hello world",
+	})
 }

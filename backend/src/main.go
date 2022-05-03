@@ -1,16 +1,12 @@
 package main
 
 import (
-	"log"
-	"net/http"
 	"mypkg/api"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	//ルーティング設定。"/"というアクセスがきたらlogを出力する
-	http.HandleFunc("/", api.RootHandle)
-	
-	log.Println("Listening...")
-	// 8080ポートでサーバーを立ち上げる
-	http.ListenAndServe(":8080", nil)
+	engine := gin.Default()
+	engine.GET("/", api.RootHandle)
+	engine.Run(":8080")
 }
