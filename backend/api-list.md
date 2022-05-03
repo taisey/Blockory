@@ -1,9 +1,9 @@
-## 各APIの使用
+## 各APIの仕様
 
 ### 日記情報一覧表示　GET DiaryInfo/{year, month, day}
 日記情報を取得するAPI
 
-与えられたクエリによって取得する期間がかわる
+与えられたクエリによって取得する期間が変化
 - year = 2022 ：2022年内の日記を全て取得
 - year = 2022, month = 2：2022年2月内の日記を全て取得
 - year = 2022, month = 2, day = 3：2022年2月3日内の日記を全て取得
@@ -18,7 +18,7 @@
  ```
 
  ```
- GET AllDiaryInfoMonth/?year=2022&month=2?day=3
+ GET AllDiaryInfoMonth/?year=2022&month=2&day=3
  ```
  
  フィールド名 | 型 | 必須 | 説明
