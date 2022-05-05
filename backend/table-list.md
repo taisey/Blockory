@@ -1,10 +1,10 @@
-## UserInfo
+## users
 列名|データ型|列制約
 --|--|--
 user_id | CHAR(16) | PRIMARY KEY
 user_name | CHAR(16) | NOT NULL
 
-## DiaryInfo
+## diaries
 列名|データ型|列制約
 --|--|--
 diary_id|CHAR(16)| PRIMARY KEY
