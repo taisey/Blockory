@@ -10,7 +10,7 @@ user_name | CHAR(16) | NOT NULL
 diary_id|CHAR(16)| PRIMARY KEY
 title|CHAR(16)|
 writer_id|CHAR(16)| NOT NULL
-description | CHAR(256) | 
+description | TEXT | 
 thumbnail_body | VARCHAR |
 target_date | DATE |
 update_date | DATETIME |
@@ -18,3 +18,4 @@ update_date | DATETIME |
 ## 懸念点
 - CHAR型の長さをどれくらいにするべきか
 - criate_dateやupdate_dateを全てのテーブルに入れるのが一般的らしいが、入れるべきか
+- TEXTは人が読める文字列、VERCHARは読めない文字列という使い分けで正しい？
