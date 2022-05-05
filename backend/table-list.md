@@ -11,7 +11,7 @@ diary_id|CHAR(16)| PRIMARY KEY
 title|CHAR(16)|
 writer_id|CHAR(16)| NOT NULL
 description | TEXT | 
-thumbnail_body | VARCHAR |
+thumbnail_body | BLOB |
 target_date | DATE |
 update_date | DATETIME |
 
