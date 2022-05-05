@@ -13,4 +13,4 @@ writer_id|CHAR(16)| NOT NULL
 description | CHAR(256) | 
 thumbnail_body | VARCHAR |
 target_date | DATE |
-update_time | DATETIME |
+update_date | DATETIME |
