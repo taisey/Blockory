@@ -46,7 +46,7 @@ day|number|false|一覧表示する日記の作成日
       writerName:  "日記作者名前",
       description: "日記の説明",
       thumbnailBody: "サムネイル本体"
-      date:"yyyy-mm-dd"
+      targetDate:"yyyy-mm-dd"
       updateDate:"yyyy-mm-dd"
     }
   ]
@@ -67,7 +67,7 @@ writerName | string | true | 日記作者名前
 description | string | true | 日記の説明
 thubnailInfo | サムネイル情報配列 | true | サムネイル情報
 thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
-date | date | 日記の日付
+targetDate | date | 日記の日付
 updateDate | date | 最後に更新した日付
 
 ### 日記情報登録 POST /DiaryInfo
