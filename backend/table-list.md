@@ -14,3 +14,7 @@ description | CHAR(256) |
 thumbnail_body | VARCHAR |
 target_date | DATE |
 update_date | DATETIME |
+
+## 懸念点
+- CHAR型の長さをどれくらいにするべきか
+- criate_dateやupdate_dateを全てのテーブルに入れるのが一般的らしいが、入れるべきか
