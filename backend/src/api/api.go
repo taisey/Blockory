@@ -21,31 +21,61 @@ func GetDiaryInfo(c *gin.Context){
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 	
 	query := `SELECT * FROM diaries WHERE target_date `
-	//year, month, dayの要素が存在するか確認 && int型に変換
-	if yearStr, ok := strconv.Atoi(params["year"]); ok{
-		if monthStr_s, ok:= strconv.Atoi(params["month"]); ok{
-			if dayStr, ok := strconv.Atoi(params["day"]); ok{
-				//検索期間が1日
-				//検索対象の先頭と末尾（末尾は含まれる)
-				startDate := time.Date(year, month, day, 0, 0, 0, time.Local)
-				endDate := startDate.ADD(time.Duration(1) * time.Day - time.Dration(1) * time.Day)
+
+	//リストが特定の要素を全て含むか確認する関数
+	containAll := func (list map[string][]string, elements []string) bool {
+		for _, element := range(elements){
+			if _, ok := list[element]; ok{
+				continue
 			}else{
-				//検索期間が1ヶ月
-				startDate := time.Date(year, month, 1, 0, 0, 0, time.Local)
-				endDate := startDate.ADD(time.Duration(1) * time.Month - time.Dration(1) * time.Day)
+				return false
 			}
-		}else{
-			//検索期間が1年
-			startDate := time.Date(year, month, 1, 0, 0, 0, time.Local)
-			endDate := startDate.ADD(time.Duration(1) * time.Year - time.Dration(1) * time.Day)
-	
-			layoutYMD = "2006-01-02"
-			startDateStr := startDate.format(layoutYMD)
-			endDateStr := endDate.format(layoutYMD)
-	
-			between := fmt.Sprintf(`BETWEEN %s AND %s`, startDateStr, endDateStr)
 		}
+		return true
 	}
+
+	//paramsのyear, month, dayをint型に変換（ExtractNum）　
+	extractNum := strconv.Atoi
+
+	//検索範囲の先頭と末尾
+	var(
+		startDate time.Time
+		endDate time.Time
+	)
+
+	if(containAll(params, [] string{"year", "month", "day"})){
+		//検索期間が1日
+		year, _ := extractNum(params["year"][0])
+		month, _ := extractNum(params["month"][0])
+		day, _ := extractNum(params["day"][0])
+
+		startDate = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
+		endDate = startDate
+		
+	}else if(containAll(params, [] string{"year", "month"})){
+		//検索期間が1ヶ月	
+		year, _ := extractNum(params["year"][0])
+		month, _ := extractNum(params["month"][0])
+
+		startDate = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
+		endDate = startDate.AddDate(0, 1, -1)
+
+	}else if(containAll(params, [] string{"year"})){
+		//検索期間が1年
+		year, _ := extractNum(params["year"][0])
+
+		startDate = time.Date(year, time.Month(1), 1, 0, 0, 0, 0, time.Local)
+		endDate = startDate.AddDate(1, 0, -1)
+	}
+
+	//yyyy-mm-dd形式に変換
+	layoutYMD := "2006-01-02"
+	startDateStr := startDate.Format(layoutYMD)
+	endDateStr := endDate.Format(layoutYMD)
+
+	//queryを生成
+	between := fmt.Sprintf(`BETWEEN %s AND %s`, startDateStr, endDateStr)
 	query = query + between
+	
 	fmt.Println(query)
 }
