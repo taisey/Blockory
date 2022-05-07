@@ -25,6 +25,7 @@ func GetDiaryInfo(c *gin.Context){
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 	
 	query := `SELECT * FROM diaries WHERE target_date `
+	querySortOption :=  ` ORDER BY target_date asc`
 	//リストが特定の要素を全て含むか確認する関数
 	containAll := func (list map[string][]string, elements []string) bool {
 		for _, element := range(elements){
@@ -79,7 +80,7 @@ func GetDiaryInfo(c *gin.Context){
 
 	//queryを生成
 	between := fmt.Sprintf(`BETWEEN '%s' AND '%s'`, startDateStr, endDateStr)
-	query = query + between
+	query = query + between + querySortOption
 	
 	fmt.Printf("[DB]query: %s\n", query)
 
