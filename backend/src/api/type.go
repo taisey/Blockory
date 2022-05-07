@@ -5,6 +5,6 @@ import(
 
 type GetDiaryInfoResponse struct{
 	DiaryCount int
-	Diaries []db.Diary
+	Diaries []db.DiaryWithWriterName
 }
 

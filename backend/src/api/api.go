@@ -24,8 +24,10 @@ func GetDiaryInfo(c *gin.Context){
 	params := req.URL.Query()
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 	
-	query := `SELECT * FROM diaries WHERE target_date `
-	querySortOption :=  ` ORDER BY target_date asc`
+	query := "SELECT diaries.diary_id, diaries.title, diaries.writer_id, users.user_name, diaries.description, " +
+			"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
+			"FROM diaries INNER JOIN users ON diaries.writer_id=users.user_id WHERE diaries.target_date "
+	querySortOption :=  ` ORDER BY diaries.target_date asc, users.user_name asc`
 	//リストが特定の要素を全て含むか確認する関数
 	containAll := func (list map[string][]string, elements []string) bool {
 		for _, element := range(elements){
@@ -89,16 +91,18 @@ func GetDiaryInfo(c *gin.Context){
 	rows, _ := dbIns.Query(query)
 	defer rows.Close()
 	
-	diaries := []db.Diary{}
+	fmt.Println(rows)
+	diaries := []db.DiaryWithWriterName{}
 	for rows.Next(){
-		nd := db.NullableDiary{}
-		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, 
+		nd := db.NullableDiaryWithWriterName{}
+		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, &nd.WriterName,
 			&nd.Description, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
 		
-		d := db.Diary{
+		d := db.DiaryWithWriterName{
 			DiaryId: nd.DiaryId,
 			Title: nd.Title.String,
 			WriterId: nd.WriterId,
+			WriterName: nd.WriterName,
 			Description: nd.Description.String,
 			ThumbnailBody: nd.ThumbnailBody.String,
 			TargetDate: nd.TargetDate,
