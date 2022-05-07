@@ -25,7 +25,6 @@ func GetDiaryInfo(c *gin.Context){
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 	
 	query := `SELECT * FROM diaries WHERE target_date `
-
 	//リストが特定の要素を全て含むか確認する関数
 	containAll := func (list map[string][]string, elements []string) bool {
 		for _, element := range(elements){
@@ -110,5 +109,10 @@ func GetDiaryInfo(c *gin.Context){
 		fmt.Println(d)
 		diaries = append(diaries, d)
 	}
-	c.JSON(http.StatusOK, diaries)
+
+	response := GetDiaryInfoResponse{
+		DiaryCount: len(diaries),
+		Diaries: diaries,
+	}
+	c.JSON(http.StatusOK, response)
 }
