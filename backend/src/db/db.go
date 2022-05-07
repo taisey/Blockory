@@ -66,6 +66,15 @@ func InitLocal(){
     }
 }
 
+//initlocal
+func Init(){
+	var err error
+	db, err = sql.Open("mysql", "yamaguchi:homebase0908@/BlockoryDB")
+    if err != nil {
+        panic(err.Error())
+    }
+}
+
 func GetDB() *sql.DB{
 	return db
 }
