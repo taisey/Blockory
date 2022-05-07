@@ -8,11 +8,9 @@ import (
 	"strconv"
 	"mypkg/db"
 	"log"
-	"encoding/json"
-	"os"
+	//"encoding/json"
+	//"os"
 )
-
-
 
 //root-handle
 func RootHandle(c *gin.Context) {
@@ -112,10 +110,5 @@ func GetDiaryInfo(c *gin.Context){
 		fmt.Println(d)
 		diaries = append(diaries, d)
 	}
-	fmt.Printf("[DB]rows: %s\n", rows)
-
-	encoder := json.NewEncoder(os.Stdout)
-    encoder.SetEscapeHTML(false)
-	encoder.Encode(diaries)
 	c.JSON(http.StatusOK, diaries)
 }
