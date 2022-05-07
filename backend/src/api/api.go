@@ -6,7 +6,13 @@ import (
 	"fmt"
 	"time"
 	"strconv"
+	"mypkg/db"
+	"log"
+	"encoding/json"
+	"os"
 )
+
+
 
 //root-handle
 func RootHandle(c *gin.Context) {
@@ -34,7 +40,7 @@ func GetDiaryInfo(c *gin.Context){
 		return true
 	}
 
-	//paramsのyear, month, dayをint型に変換（ExtractNum）　
+	//文字列をint型に変換（ExtractNum）　
 	extractNum := strconv.Atoi
 
 	//検索範囲の先頭と末尾
@@ -43,6 +49,7 @@ func GetDiaryInfo(c *gin.Context){
 		endDate time.Time
 	)
 
+	//year, month, dayを含むかどうかで場合わけ
 	if(containAll(params, [] string{"year", "month", "day"})){
 		//検索期間が1日
 		year, _ := extractNum(params["year"][0])
@@ -74,8 +81,41 @@ func GetDiaryInfo(c *gin.Context){
 	endDateStr := endDate.Format(layoutYMD)
 
 	//queryを生成
-	between := fmt.Sprintf(`BETWEEN %s AND %s`, startDateStr, endDateStr)
+	between := fmt.Sprintf(`BETWEEN '%s' AND '%s'`, startDateStr, endDateStr)
 	query = query + between
 	
-	fmt.Println(query)
+	fmt.Printf("[DB]query: %s\n", query)
+
+	//DBインスタンスの取得
+	dbIns := db.GetDB()
+	rows, _ := dbIns.Query(query)
+	defer rows.Close()
+	
+	diaries := []db.Diary{}
+	for rows.Next(){
+		nd := db.NullableDiary{}
+		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, 
+			&nd.Description, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
+		
+		d := db.Diary{
+			DiaryId: nd.DiaryId,
+			Title: nd.Title.String,
+			WriterId: nd.WriterId,
+			Description: nd.Description.String,
+			ThumbnailBody: nd.ThumbnailBody.String,
+			TargetDate: nd.TargetDate,
+			UpdateDate: nd.UpdateDate,
+		}
+		if err != nil{
+			log.Fatal(err)
+		}
+		fmt.Println(d)
+		diaries = append(diaries, d)
+	}
+	fmt.Printf("[DB]rows: %s\n", rows)
+
+	encoder := json.NewEncoder(os.Stdout)
+    encoder.SetEscapeHTML(false)
+	encoder.Encode(diaries)
+	c.JSON(http.StatusOK, diaries)
 }
