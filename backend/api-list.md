@@ -37,38 +37,39 @@ day|number|false|一覧表示する日記の作成日
 **レスポンス200応答**
 ```
 {
-  diaryCount: 1,
-  items:[
+  DiaryCount: 1,
+  Diaries:[
     {
-      diaryId:"日記ID",
-      title: "日記タイトル",
-      writerId: "日記作者ID",
-      writerName:  "日記作者名前",
-      description: "日記の説明",
-      thumbnailBody: "サムネイル本体"
-      targetDate:"yyyy-mm-dd"
-      updateDate:"yyyy-mm-dd"
+      DiaryId:"日記ID",
+      Title: "日記タイトル",
+      WriterId: "日記作者ID",
+      WriterName:  "日記作者名前",
+      Description: "日記の説明",
+      DiaryBody: "日記コード",
+      ThumbnailBody: "サムネイル本体",
+      TargetDate:"yyyy-mm-dd",
+      UpdateDate:"yyyy-mm-dd",
     }
   ]
 }
 ```
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
-diaryCount|number|true|条件に一致する日記の全件数
-items|日記情報配列|true|一覧表示するための日記情報の配列
+DiaryCount|number|true|条件に一致する日記の全件数
+Diaries|日記情報配列|true|一覧表示するための日記情報の配列
 
 日記情報：
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
-diaryId | string | true | 日記ID
-title | string | true | 日記タイトル
-writerId | string | true | 日記作者ID
-writerName | string | true | 日記作者名前
-description | string | true | 日記の説明
-thubnailInfo | サムネイル情報配列 | true | サムネイル情報
-thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
-targetDate | date | 日記の日付
-updateDate | date | 最後に更新した日付
+DiaryId | string | true | 日記ID
+Title | string | false | 日記タイトル
+WriterId | string | true | 日記作者ID
+WriterName | string | false | 日記作者名前
+Description | string | false | 日記の説明
+DiaryBody | string | true | 日記コード
+ThumbnailBody | string | false | サムネイル画像をbase64でエンコードした文字列
+TargetDate | date | true | 日記の日付
+UpdateDate | date | true | 最後に更新した日付
 
 ### 日記情報登録 POST /DiaryInfo
 日記情報を保存するAPI
@@ -77,12 +78,13 @@ updateDate | date | 最後に更新した日付
 **リクエスト**
 ```
 {
-  diaryCount: 1,
-  items:[
+  DiaryCount: 1,
+  Diaries:[
     {
-      title: "日記タイトル",
-      description: "日記の説明",
-      thumbnailBody: "サムネイル本体"
+      Title: "日記タイトル",
+      Description: "日記の説明",
+      DiaryBody: "日記コード",
+      ThumbnailBody: "サムネイル本体"
     }
   ]
 }
@@ -91,10 +93,10 @@ updateDate | date | 最後に更新した日付
 日記情報：
 フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
-title | string | true | 日記タイトル
-description | string | true | 日記の説明
-thubnailInfo | サムネイル情報配列 | true | サムネイル情報
-thumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
+Title | string | true | 日記タイトル
+Description | string | true | 日記の説明
+DiaryBody | string | true | 日記コード
+ThumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
 
 ### ユーザー情報取得 GET /UserInfo
 ユーザ情報を取得するAPI
@@ -108,14 +110,14 @@ thumbnailBody | string | true | サムネイル画像をbase64でエンコード
  **レスポンス**
  ```
  {
-  userId:"ユーザID",
-  userName:"ユーザネーム"
+  UserId:"ユーザID",
+  UserName:"ユーザネーム"
  }
  ```
  ユーザ情報：
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
-userId | string | true | ユーザID
-userName | string | true | ユーザネーム
+UserId | string | true | ユーザID
+UserName | string | true | ユーザネーム
  
 
