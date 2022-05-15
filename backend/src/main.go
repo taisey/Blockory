@@ -30,6 +30,6 @@ func main() {
 	engine.GET("/DiaryInfo", api.GetDiaryInfo)
 	//engine.POST("/DiaryInfo", api.postDiaryInfo)
 	//engine.GET("/UserInfo", api.getUserInfo)
-	engine.Run(":8000")
+	engine.Run(":8080")
 
 }
