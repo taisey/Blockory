@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 )
 
 var (
@@ -57,22 +58,27 @@ type DiaryWithWriterName struct{
 	UpdateDate string
 }
 
-//initlocal
+//ローカルDBを使用するための初期設定
 func InitLocal(){
+	fmt.Println("[DB] trying to connect LocalDB")
 	var err error
 	db, err = sql.Open("mysql", "yamaguchi:homebase0908@/BlockoryDB")
     if err != nil {
         panic(err.Error())
-    }
+	}
+	fmt.Println("[DB] connected LocalDB successfully")
 }
 
-//initlocal
-func Init(){
+//本番DBを使用するための初期設定
+func InitProd(userName string, password string, host string, databaseName string){
 	var err error
-	db, err = sql.Open("mysql", "yamaguchi:homebase0908@/BlockoryDB")
+	fmt.Println("[DB] trying to connect ProdDB")
+	dbInfo := fmt.Sprintf("%s:%s@tcp(%s)/%s", userName, password, host, databaseName)
+	db, err = sql.Open("mysql", dbInfo)
     if err != nil {
         panic(err.Error())
-    }
+	}
+	fmt.Println("[DB] connected ProdDB successfully")
 }
 
 func GetDB() *sql.DB{

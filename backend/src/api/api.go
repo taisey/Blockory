@@ -84,20 +84,29 @@ func GetDiaryInfo(c *gin.Context){
 	between := fmt.Sprintf(`BETWEEN '%s' AND '%s'`, startDateStr, endDateStr)
 	query = query + between + querySortOption
 	
-	fmt.Printf("[DB]query: %s\n", query)
+	fmt.Printf("[DB] query: %s\n", query)
 
 	//DBインスタンスの取得
 	dbIns := db.GetDB()
-	rows, _ := dbIns.Query(query)
+
+	//検索結果をrowsに格納
+	rows, err := dbIns.Query(query)
+	if(err != nil){
+		panic(err.Error())
+	}
 	defer rows.Close()
 	
 	fmt.Println(rows)
+
+	//レスポンスと同型の構造体配列diariesの生成
 	diaries := []db.DiaryWithWriterName{}
 	for rows.Next(){
+		//Nullを許す構造体ndを生成
 		nd := db.NullableDiaryWithWriterName{}
 		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, &nd.WriterName,
 			&nd.Description, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
 		
+		//dに日記情報を格納
 		d := db.DiaryWithWriterName{
 			DiaryId: nd.DiaryId,
 			Title: nd.Title.String,
@@ -112,6 +121,7 @@ func GetDiaryInfo(c *gin.Context){
 			log.Fatal(err)
 		}
 		fmt.Println(d)
+		//dをdiariesに追加
 		diaries = append(diaries, d)
 	}
 
