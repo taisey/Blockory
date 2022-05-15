@@ -84,7 +84,8 @@ UpdateDate | date | true | 最後に更新した日付
       Title: "日記タイトル",
       Description: "日記の説明",
       DiaryBody: "日記コード",
-      ThumbnailBody: "サムネイル本体"
+      ThumbnailBody: "サムネイル本体",
+      TargetDate: "日記の日付",
     }
   ]
 }
@@ -97,6 +98,7 @@ Title | string | true | 日記タイトル
 Description | string | true | 日記の説明
 DiaryBody | string | true | 日記コード
 ThumbnailBody | string | true | サムネイル画像をbase64でエンコードした文字列
+TargetDate | date | true | 日記の日付
 
 ### ユーザー情報取得 GET /UserInfo
 ユーザ情報を取得するAPI
