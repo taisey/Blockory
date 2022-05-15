@@ -31,7 +31,7 @@ jobs:
          
       - name: build
         run: |
-          ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "cd ~/Blockory/backend/src/build && bash build.sh && ./main pord ${{ secrets.RDS_USERNAME }} ${{ secrets.RDS_PASSWORD }} ${{ secrets.RDS_HOST }} ${{ secrets.RDS_DBNAME }}"
+          ssh -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "cd ~/Blockory/backend/src/build && bash build.sh"
           
       - name: exec
         run: |
