@@ -1,16 +1,17 @@
 ## users
 列名|データ型|列制約
 --|--|--
-user_id | CHAR(16) | PRIMARY KEY
+user_id | CHAR(48) | PRIMARY KEY
 user_name | CHAR(16) | NOT NULL
 
 ## diaries
 列名|データ型|列制約
 --|--|--
-diary_id|CHAR(16)| PRIMARY KEY
+diary_id|CHAR(48)| PRIMARY KEY
 title|CHAR(16)|
-writer_id|CHAR(16)| NOT NULL
+writer_id|CHAR(48)| NOT NULL
 description | TEXT | 
+diary_body | TEXT |
 thumbnail_body | BLOB |
 target_date | DATE |
 update_date | DATETIME |
