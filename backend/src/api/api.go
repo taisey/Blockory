@@ -135,7 +135,7 @@ func GetDiaryInfo(c *gin.Context){
 }
 
 func PostDiaryInfo(c *gin.Context){
-	Request := GetDiaryInfoRequest{}
+	Request := PostDiaryInfoRequest{}
 	err := c.ShouldBindJSON(&Request)
 
 	fmt.Println("[Request] ", Request)

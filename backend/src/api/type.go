@@ -8,3 +8,12 @@ type GetDiaryInfoResponse struct{
 	Diaries []db.DiaryWithWriterName
 }
 
+type PostDiaryInfoRequest struct{
+	Title string `json:"Title"`
+	Description string `json:"Description"`
+	DiaryBody string `json:"DiaryBody"`
+	ThumbnailBody string `json:"ThumbnailBody"`
+	TargetDate string `json:"TargetDate"`
+}
+
+
