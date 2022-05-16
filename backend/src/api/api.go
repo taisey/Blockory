@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"mypkg/db"
 	"log"
+	"github.com/google/uuid"
 	//"encoding/json"
 	//"os"
 )
@@ -24,7 +25,7 @@ func GetDiaryInfo(c *gin.Context){
 	params := req.URL.Query()
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 	
-	query := "SELECT diaries.diary_id, diaries.title, diaries.writer_id, users.user_name, diaries.description, " +
+	query := "SELECT diaries.diary_id, diaries.title, diaries.writer_id, users.user_name, diaries.description, diaries.diary_body, " +
 			"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
 			"FROM diaries INNER JOIN users ON diaries.writer_id=users.user_id WHERE diaries.target_date "
 	querySortOption :=  ` ORDER BY diaries.target_date asc, users.user_name asc`
@@ -104,7 +105,7 @@ func GetDiaryInfo(c *gin.Context){
 		//Nullを許す構造体ndを生成
 		nd := db.NullableDiaryWithWriterName{}
 		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, &nd.WriterName,
-			&nd.Description, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
+			&nd.Description, &nd.DiaryBody, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
 		
 		//dに日記情報を格納
 		d := db.DiaryWithWriterName{
@@ -113,6 +114,7 @@ func GetDiaryInfo(c *gin.Context){
 			WriterId: nd.WriterId,
 			WriterName: nd.WriterName,
 			Description: nd.Description.String,
+			DiaryBody: nd.DiaryBody.String,
 			ThumbnailBody: nd.ThumbnailBody.String,
 			TargetDate: nd.TargetDate,
 			UpdateDate: nd.UpdateDate,
@@ -130,4 +132,50 @@ func GetDiaryInfo(c *gin.Context){
 		Diaries: diaries,
 	}
 	c.JSON(http.StatusOK, response)
+}
+
+func PostDiaryInfo(c *gin.Context){
+	Request := GetDiaryInfoRequest{}
+	err := c.ShouldBindJSON(&Request)
+
+	//unmarshalが失敗した場合、404を返す
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return;
+	}
+
+	//diariesテーブルへのINSERT文
+	query := `INSERT diaries (diary_id, title, description, diary_body, thumbnail_body, writer_id, target_date, update_date) ` +
+			`VALUES("%s", "%s", "%s", "%s", "%s", "%s, "%s);`
+	dbIns := db.GetDB()
+
+	//[TODO]CookieのセッションIDからwriterIdを持ってくる
+	writer_id := "testWriterId0"
+
+	//diary_idをuuidで生成する
+	diary_id, err := uuid.NewRandom()
+	if err != nil {
+			fmt.Println(err)
+			return
+	}
+
+	//update_dateを生成する
+	nowTime := time.Now()
+	//yyyy-mm-dd hh:mm:ss形式に変換
+	layoutYMDHMS := "2006-01-02 15:04:05"
+	updateDate := nowTime.Format(layoutYMDHMS)
+
+	//queryにvalueを埋め込む
+	queryWithParam := fmt.Sprintf(query, diary_id, Request.Title, Request.Description, Request.DiaryBody, Request.ThumbnailBody, 
+						writer_id, Request.TargetDate, updateDate)
+	
+	//クエリの実行
+	_, err1 := dbIns.Exec(queryWithParam)
+	//クエリの実行が失敗した場合404を返す
+	if err1 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	//200を返す
+	//[TODO]Request + writer_id + writer_name + diary_id + update_dateをレスポンスとして返したい
+	c.JSON(http.StatusOK, Request)
 }

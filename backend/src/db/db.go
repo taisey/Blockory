@@ -21,6 +21,7 @@ type NullableDiary struct{
 	Title sql.NullString
 	WriterId string
 	Description sql.NullString
+	DiaryBody sql.NullString
 	ThumbnailBody sql.NullString
 	TargetDate string
 	UpdateDate string
@@ -32,6 +33,7 @@ type NullableDiaryWithWriterName struct{
 	WriterId string
 	WriterName string
 	Description sql.NullString
+	DiaryBody sql.NullString
 	ThumbnailBody sql.NullString
 	TargetDate string
 	UpdateDate string
@@ -42,6 +44,7 @@ type Diary struct{
 	Title string
 	WriterId string
 	Description string
+	DiaryBody string
 	ThumbnailBody string
 	TargetDate string
 	UpdateDate string
@@ -53,6 +56,7 @@ type DiaryWithWriterName struct{
 	WriterId string
 	WriterName string
 	Description string
+	DiaryBody string
 	ThumbnailBody string
 	TargetDate string
 	UpdateDate string
