@@ -138,6 +138,7 @@ func PostDiaryInfo(c *gin.Context){
 	Request := GetDiaryInfoRequest{}
 	err := c.ShouldBindJSON(&Request)
 
+	fmt.Println("[Request] ", Request)
 	//unmarshalが失敗した場合、404を返す
 	if err != nil{
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -146,7 +147,7 @@ func PostDiaryInfo(c *gin.Context){
 
 	//diariesテーブルへのINSERT文
 	query := `INSERT diaries (diary_id, title, description, diary_body, thumbnail_body, writer_id, target_date, update_date) ` +
-			`VALUES("%s", "%s", "%s", "%s", "%s", "%s, "%s);`
+			`VALUES("%s", "%s", "%s", "%s", "%s","%s", "%s", "%s");`
 	dbIns := db.GetDB()
 
 	//[TODO]CookieのセッションIDからwriterIdを持ってくる
@@ -170,6 +171,7 @@ func PostDiaryInfo(c *gin.Context){
 						writer_id, Request.TargetDate, updateDate)
 	
 	//クエリの実行
+	fmt.Println("[Query] ", queryWithParam)
 	_, err1 := dbIns.Exec(queryWithParam)
 	//クエリの実行が失敗した場合404を返す
 	if err1 != nil {
