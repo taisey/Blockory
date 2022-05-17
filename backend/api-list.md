@@ -1,9 +1,10 @@
 ## API一覧
 説明|メゾット|エンドポイント
  -- | -- | -- 
-日記情報一覧取得 |GET|DiaryInfo/{year, month, day}
-日記情報登録 |POST |DiaryInfo
-ユーザー情報取得 |GET|UserInfo
+日記情報一覧取得 | GET |DiaryInfo/{year, month, day}
+日記情報登録 | POST |DiaryInfo
+ユーザー情報取得 | GET |UserInfo
+ユーザー認証 | GET | AuthUserInfo
 
 ## 各APIの仕様
 
@@ -122,4 +123,31 @@ TargetDate | date | true | 日記の日付
 UserId | string | true | ユーザID
 UserName | string | true | ユーザネーム
  
+### ユーザー認証 GET /AuthUserInfo
+UserIdとUserPasswordで認証するAPI
 
+SessionIdをレスポンスで返す
+
+**リクエスト**
+```
+ {
+   UserId:"ユーザID",
+  UserPassword:"パスワード"
+ }
+ ```
+ユーザー認証情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+UserId | string | true | ユーザーID
+UserPassword | string | true | パスワード
+
+ **レスポンス**
+ ```
+ {
+  SessionId:"セッションID"
+ }
+  ```
+ セッション情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+SessionId | string | true | セッションID
