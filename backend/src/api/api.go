@@ -7,6 +7,7 @@ import (
 	"time"
 	"strconv"
 	"mypkg/db"
+	"mypkg/redis"
 	"log"
 	"github.com/google/uuid"
 	//"encoding/json"
@@ -21,14 +22,16 @@ func RootHandle(c *gin.Context) {
 }
 
 func GetDiaryInfo(c *gin.Context){
+	//リクエストをディクショナリにする
 	req := c.Request
 	params := req.URL.Query()
+
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 	
 	query := "SELECT diaries.diary_id, diaries.title, diaries.writer_id, users.user_name, diaries.description, diaries.diary_body, " +
 			"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
 			"FROM diaries INNER JOIN users ON diaries.writer_id=users.user_id WHERE diaries.target_date "
-	querySortOption :=  ` ORDER BY diaries.target_date asc, users.user_name asc`
+	querySortOption :=  ` ORDER BY diaries.target_date asc, users.user_name asc;`
 	//リストが特定の要素を全て含むか確認する関数
 	containAll := func (list map[string][]string, elements []string) bool {
 		for _, element := range(elements){
@@ -180,4 +183,73 @@ func PostDiaryInfo(c *gin.Context){
 	//200を返す
 	//[TODO]Request + writer_id + writer_name + diary_id + update_dateをレスポンスとして返したい
 	c.JSON(http.StatusOK, Request)
+}
+
+func GetUserInfo(c *gin.Context){
+	//HeaderからSessionIdを入手
+	session_id:= c.Request.Header.Get("SessionId")
+
+	//redisからUserIdを取得
+	user_id := redis.Get(session_id)
+
+	//クエリを作成
+	query := `SELECT user_name FROM users WHERE user_id=%s ;`
+	queryWithParam := fmt.Sprintf(query, user_id)
+	
+	//クエリを実行
+	dbIns := db.GetDB()
+	rows, _ := dbIns.Query(queryWithParam)
+
+
+	//レスポンスを作成
+	response := GetUserInfoResponse{UserId: user_id}
+	for rows.Next(){
+		rows.Scan(&response.UserName)
+	}
+
+	
+}
+
+func AuthUserInfo(c *gin.Context){
+	//リクエストをディクショナリにする
+	req := c.Request
+	params := req.URL.Query()
+
+	user_id := params["UserId"][0]
+	user_password := params["UserPassword"][0]
+
+	//user_idとuser_passwordを照合する
+	query := `SELECT * FROM users WHERE user_id=%s AND user_password=%s`
+	queryWithParams := fmt.Sprintf(query, user_id, user_password)
+
+	//DBインスタンスの取得
+	dbIns := db.GetDB()	
+	rows, _ := dbIns.Query(queryWithParams)
+
+	//認証できたかどうかを表すフラグ
+	auth_f := false
+	for rows.Next(){
+		auth_f = true
+	}
+	
+	//認証ができた場合
+	if(auth_f){
+		session_id_uuid, err := uuid.NewRandom()
+		if err != nil {
+				fmt.Println(err)
+				return
+		}
+		session_id := session_id_uuid.String()
+
+		//redisに登録
+		redis.Set(session_id, user_id)
+
+		//レスポンスの作成
+		response := AuthUserInfoResponse{SessionId: session_id}
+		c.JSON(http.StatusOK, response)
+	}else{
+		//認証ができない場合
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Your Account Not Found"})
+		return
+	}
 }
