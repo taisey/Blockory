@@ -3,6 +3,7 @@
 --|--|--
 user_id | CHAR(48) | PRIMARY KEY
 user_name | CHAR(16) | NOT NULL
+user_possword | CHAR(16) | NOT NULL
 
 ## diaries
 列名|データ型|列制約
@@ -20,3 +21,4 @@ update_date | DATETIME |
 - CHAR型の長さをどれくらいにするべきか
 - criate_dateやupdate_dateを全てのテーブルに入れるのが一般的らしいが、入れるべきか
 - TEXTは人が読める文字列、VERCHARは読めない文字列という使い分けで正しい？
+- passwordは別のtableにするべき？気にしすぎ？
