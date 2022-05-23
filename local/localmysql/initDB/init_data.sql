@@ -11,15 +11,15 @@ INSERT diaries (diary_id, title, writer_id, target_date, update_date) VALUES("te
 INSERT diaries (diary_id, title, writer_id, target_date, update_date) VALUES("testDiaryId11", "testTitle11", "testWriterId11", "2021-11-01", "2021-11-01 01:01:01");
 INSERT diaries (diary_id, title, writer_id, target_date, update_date) VALUES("testDiaryId12", "testTitle12", "testWriterId12", "2021-12-01", "2021-12-01 01:01:01");
 
-INSERT users (user_id, user_name) VALUES("testWriterId1", "tester1");
-INSERT users (user_id, user_name) VALUES("testWriterId2", "tester2");
-INSERT users (user_id, user_name) VALUES("testWriterId3", "tester3");
-INSERT users (user_id, user_name) VALUES("testWriterId4", "tester4");
-INSERT users (user_id, user_name) VALUES("testWriterId5", "tester5");
-INSERT users (user_id, user_name) VALUES("testWriterId6", "tester6");
-INSERT users (user_id, user_name) VALUES("testWriterId7", "tester7");
-INSERT users (user_id, user_name) VALUES("testWriterId8", "tester8");
-INSERT users (user_id, user_name) VALUES("testWriterId9", "tester9");
-INSERT users (user_id, user_name) VALUES("testWriterId10", "tester10");
-INSERT users (user_id, user_name) VALUES("testWriterId11", "tester11");
-INSERT users (user_id, user_name) VALUES("testWriterId12", "tester12");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId1", "tester1", "password1");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId2", "tester2", "password2");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId3", "tester3", "password3");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId4", "tester4", "password4");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId5", "tester5", "password5");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId6", "tester6", "password6");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId7", "tester7", "password7");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId8", "tester8", "password8");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId9", "tester9", "password9");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId10", "tester10", "password10");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId11", "tester11", "password11");
+INSERT users (user_id, user_name, user_password) VALUES("testWriterId12", "tester12", "password12");
