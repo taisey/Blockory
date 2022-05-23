@@ -26,7 +26,7 @@
  ```
 
  ```
- GET AllDiaryInfoMonth/?year=2022&month=2&day=3
+ GET DiaryInfo/?year=2022&month=2&day=3
  ```
  
  フィールド名 | 型 | 必須 | 説明
