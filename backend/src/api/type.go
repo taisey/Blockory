@@ -16,4 +16,13 @@ type PostDiaryInfoRequest struct{
 	TargetDate string `json:"TargetDate"`
 }
 
+type GetUserInfoResponse struct{
+	UserId string 
+	UserName string
+}
+
+type AuthUserInfoResponse struct{
+	SessionId string
+}
+
 
