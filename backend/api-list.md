@@ -4,8 +4,9 @@
 日記情報一覧取得 | GET |DiaryInfo/{year, month, day}
 日記情報登録 | POST |DiaryInfo
 ユーザー情報取得 | GET |UserInfo
+ユーザー登録 | POST | UserInfo
 ユーザー認証 | GET | AuthUserInfo
-ユーザー登録 | POST | RegisterUser
+
 
 ## 各APIの仕様
 
@@ -153,7 +154,7 @@ UserPassword | string | true | パスワード
  -- | -- | -- | --
 SessionId | string | true | セッションID
 
-### ユーザー登録　POST /RegisterUser
+### ユーザー登録　POST /UserInfo
  ユーザー情報を登録するAPI
  
  既に登録されたユーザIDと重複していない場合：
@@ -188,7 +189,7 @@ UserPassword | string | true | ユーザパスワード
   UserPassword:"パスワード"
  }
  ```
-  **レスポンス40応答**
+  **レスポンス400応答**
  ```
  { 
   UserId:"ユーザID",
