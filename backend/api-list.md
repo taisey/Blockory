@@ -4,7 +4,9 @@
 日記情報一覧取得 | GET |DiaryInfo/{year, month, day}
 日記情報登録 | POST |DiaryInfo
 ユーザー情報取得 | GET |UserInfo
+ユーザー登録 | POST | UserInfo
 ユーザー認証 | GET | AuthUserInfo
+
 
 ## 各APIの仕様
 
@@ -141,7 +143,7 @@ SessionIdをレスポンスで返す
 UserId | string | true | ユーザーID
 UserPassword | string | true | パスワード
 
- **レスポンス**
+ **レスポンス200応答**
  ```
  {
   SessionId:"セッションID"
@@ -151,3 +153,46 @@ UserPassword | string | true | パスワード
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
 SessionId | string | true | セッションID
+
+### ユーザー登録　POST /UserInfo
+ ユーザー情報を登録するAPI
+ 
+ 既に登録されたユーザIDと重複していない場合：
+ DBにユーザ情報を登録して200レスポンスを返す
+ 
+  既に登録されたユーザIDと重複していた場合：
+ 400レスポンスを返す
+ 
+ **リクエスト ** 
+```
+ { 
+  UserId:"ユーザID",
+  UserName:"ユーザ名",
+  UserPassword:"パスワード"
+ }
+ ```
+ 
+ ユーザ情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+UserId | string | true | ユーザID
+UserName | string | true | ユーザネーム
+UserPassword | string | true | ユーザパスワード
+
+
+
+ **レスポンス200応答**
+ ```
+ { 
+  UserId:"ユーザID",
+  UserName:"ユーザ名",
+  UserPassword:"パスワード"
+ }
+ ```
+  **レスポンス400応答**
+ ```
+ { 
+ }
+ ```
+ 
+ 
