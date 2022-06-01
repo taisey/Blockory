@@ -190,10 +190,15 @@ func GetUserInfo(c *gin.Context){
 	session_id:= c.Request.Header.Get("SessionId")
 
 	//redisからUserIdを取得
-	user_id := redis.Get(session_id)
+	user_id, err:= redis.Get(session_id)
+	if(err != nil){
+		//UserIdの取得に失敗したとき
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Your SessionId is invalid"})
+		return
+	}
 
 	//クエリを作成
-	query := `SELECT user_name FROM users WHERE user_id=%s ;`
+	query := `SELECT user_name FROM users WHERE user_id="%s" ;`
 	queryWithParam := fmt.Sprintf(query, user_id)
 	
 	//クエリを実行
@@ -206,8 +211,54 @@ func GetUserInfo(c *gin.Context){
 	for rows.Next(){
 		rows.Scan(&response.UserName)
 	}
+	c.JSON(http.StatusOK, response)
+	return
+}
 
+func PostUserInfo(c * gin.Context){
+	Request := PostUserInfoRequest{}
+	err := c.ShouldBindJSON(&Request)
+
+	fmt.Println("[Request] ", Request)
+	//unmarshalが失敗した場合、404を返す
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return;
+	}
+
+	user_id := Request.UserId
+	user_name := Request.UserName
+	user_password := Request.UserPassword
+
+	//登録したいIDと同一のIDを持つユーザを抽出する
+	query := `SELECT * FROM users WHERE user_id="%s" ;`
+	queryWithParams := fmt.Sprintf(query, user_id)
+	fmt.Printf("[query]")
+	fmt.Println(queryWithParams)
+
+	//DBインスタンスの取得
+	dbIns := db.GetDB()	
+	rows, _ := dbIns.Query(queryWithParams)
+
+	//既に同IDのユーザがいるかどうかの確認
+	exist_f := false
+	for rows.Next(){
+		exist_f = true
+	}
 	
+	if(exist_f == false){
+		//IDの重複がなかった場合
+		insertQuery := `INSERT users (user_id, user_name, user_password) VALUES ("%s", "%s", "%s")`
+		insertQueryWithParams := fmt.Sprintf(insertQuery, user_id, user_name, user_password)
+		dbIns.Query(insertQueryWithParams)
+		
+		//リクエストそのままを200レスポンスで返す
+		c.JSON(http.StatusOK, Request)
+	}else{
+		//IDの重複があった場合
+		//400レスポンスを返す
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Your UserId Is Already Used"})
+	}
 }
 
 func AuthUserInfo(c *gin.Context){

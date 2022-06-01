@@ -25,4 +25,10 @@ type AuthUserInfoResponse struct{
 	SessionId string
 }
 
+type PostUserInfoRequest struct{
+	UserId string
+	UserName string
+	UserPassword string
+}
+
 

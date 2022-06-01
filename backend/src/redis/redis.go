@@ -35,10 +35,7 @@ func Set(key, value string) string{
     return res
 }
 // データの取得(Redis: GET key)
-func Get(key string) string {
+func Get(key string) (string, error) {
     res, err := redis.String(Con.Do("GET", key))
-    if err != nil {
-        panic(err)
-    }
-    return res
+    return res, err
 }
