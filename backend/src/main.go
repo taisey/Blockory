@@ -75,7 +75,8 @@ func main() {
 	engine.GET("/DiaryInfo", api.GetDiaryInfo)
 	engine.POST("/DiaryInfo", api.PostDiaryInfo)
 	engine.GET("/AuthUserInfo", api.AuthUserInfo)
-	//engine.GET("/UserInfo", api.getUserInfo)
+	engine.GET("/UserInfo", api.GetUserInfo)
+	engine.POST("/UserInfo", api.PostUserInfo)
 	engine.Run(":8080")
 
 }
