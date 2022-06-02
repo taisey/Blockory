@@ -1,7 +1,7 @@
 ## API一覧
 説明|メゾット|エンドポイント
  -- | -- | -- 
-日記情報一覧取得 | GET |DiaryInfo/{year, month, day}
+日記情報一覧取得 | GET |DiaryInfo/{year, month, day, writerId}
 日記情報登録 | POST |DiaryInfo
 ユーザー情報取得 | GET |UserInfo
 ユーザー登録 | POST | UserInfo
@@ -10,13 +10,14 @@
 
 ## 各APIの仕様
 
-### 日記情報一覧取得　GET DiaryInfo/{year, month, day}
+### 日記情報一覧取得　GET DiaryInfo/{year, month, day, writerId}
 日記情報を取得するAPI
 
 与えられたクエリによって取得する期間が変化
 - year = 2022 ：2022年内の日記を全て取得
 - year = 2022, month = 2：2022年2月内の日記を全て取得
 - year = 2022, month = 2, day = 3：2022年2月3日内の日記を全て取得
+- year = 2022, writerId = test1 :ユーザーtest1の2022年の日記を全て取得
 
 **リクエスト**
 ```
