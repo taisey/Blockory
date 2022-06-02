@@ -86,8 +86,18 @@ func GetDiaryInfo(c *gin.Context){
 
 	//queryを生成
 	between := fmt.Sprintf(`BETWEEN '%s' AND '%s'`, startDateStr, endDateStr)
-	query = query + between + querySortOption
-	
+
+
+	if(containAll(params, [] string{"writerId"})){
+		//クエリにuserIdを含む場合
+		user_id := params["writerId"][0]
+		userIdQuery := ` AND writer_id="%s" `
+		userIdQueryWithParams := fmt.Sprintf(userIdQuery, user_id)
+		query = query + between + userIdQueryWithParams
+	}else{
+		//クエリにuserIdを含まない場合
+		query = query + between + querySortOption
+	}
 	fmt.Printf("[DB] query: %s\n", query)
 
 	//DBインスタンスの取得
