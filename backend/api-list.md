@@ -6,6 +6,7 @@
 ユーザー情報取得 | GET |UserInfo
 ユーザー登録 | POST | UserInfo
 ユーザー認証 | GET | AuthUserInfo
+日記生成　| POST | MakeDiary
 
 
 ## 各APIの仕様
@@ -198,4 +199,37 @@ UserPassword | string | true | ユーザパスワード
  }
  ```
  
- 
+ ## 日記生成　POST /MakeDiary
+ 日記コードをもとに日記動画を生成する
+ **リクエスト**
+ ```
+ {
+ DiaryCode:[
+   {
+    Action:アクション名
+    Element:エレメント名
+   }, 
+   {
+    Action:アクション名
+    Element:エレメント名
+   }, 
+  ]
+ }
+ ```
+日記コード情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+DiaryCode | Array | true |　アクションとエレメントの組の配列
+Action | string | true | アクション名
+Element | string | true | エレメント名
+
+ **レスポンス200応答**
+ ```
+html??
+ ```
+  **レスポンス400応答**
+ ```
+ { 
+ }
+ ```
+
