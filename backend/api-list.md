@@ -1,34 +1,38 @@
 ## API一覧
 説明|メゾット|エンドポイント
  -- | -- | -- 
-日記情報一覧取得 | GET |DiaryInfo/{year, month, day}
+日記情報一覧取得 | GET |DiaryInfo/{year, month, day, writerId}
 日記情報登録 | POST |DiaryInfo
 ユーザー情報取得 | GET |UserInfo
 ユーザー登録 | POST | UserInfo
 ユーザー認証 | GET | AuthUserInfo
+日記生成　| POST | MakeDiary
 
 
 ## 各APIの仕様
 
-### 日記情報一覧取得　GET DiaryInfo/{year, month, day}
+### 日記情報一覧取得　GET DiaryInfo/{year, month, day, writerId}
 日記情報を取得するAPI
 
-与えられたクエリによって取得する期間が変化
+与えられたクエリによって取得する期間が変化する
+また、writerIdを与えることで特定のユーザーの日記のみを取得できる
 - year = 2022 ：2022年内の日記を全て取得
 - year = 2022, month = 2：2022年2月内の日記を全て取得
 - year = 2022, month = 2, day = 3：2022年2月3日内の日記を全て取得
+- year = 2022, writerId = test1 :ユーザーtest1の2022年の日記を全て取得
 
 **リクエスト**
 ```
  {
    year: 2022,
    month: 2,
-   day: 3
+   day: 3,
+   writerId: id
  }
  ```
 
  ```
- GET DiaryInfo/?year=2022&month=2&day=3
+ GET DiaryInfo/?year=2022&month=2&day=3&writerId=test1
  ```
  
  フィールド名 | 型 | 必須 | 説明
@@ -195,4 +199,32 @@ UserPassword | string | true | ユーザパスワード
  }
  ```
  
- 
+ ## 日記生成　POST /MakeDiary
+ 日記コードをもとに日記動画を生成する
+ **リクエスト**
+ ```
+ {
+  Action:"アクション名, アクション名, アクション名"
+  Element:"エレメント名, エレメント名, エレメント名"
+  UserName:"ユーザ名"
+  Date:"yyyy-mm-dd"
+ }
+ ```
+日記コード情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+Action | string | true | アクション名を","で区切ったもの
+Element | string | true | エレメント名を","で区切ったもの
+UserName | string | true | ユーザ名
+Date | string | true | 日付
+
+ **レスポンス200応答**
+ ```
+html??
+ ```
+  **レスポンス400応答**
+ ```
+ { 
+ }
+ ```
+
