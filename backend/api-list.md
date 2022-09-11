@@ -204,24 +204,19 @@ UserPassword | string | true | ユーザパスワード
  **リクエスト**
  ```
  {
- DiaryCode:[
-   {
-    Action:アクション名
-    Element:エレメント名
-   }, 
-   {
-    Action:アクション名
-    Element:エレメント名
-   }, 
-  ]
+  Action:"アクション名, アクション名, アクション名"
+  Element:"エレメント名, エレメント名, エレメント名"
+  UserName:"ユーザ名"
+  Date:"yyyy-mm-dd"
  }
  ```
 日記コード情報：
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
-DiaryCode | Array | true |　アクションとエレメントの組の配列
-Action | string | true | アクション名
-Element | string | true | エレメント名
+Action | string | true | アクション名を","で区切ったもの
+Element | string | true | エレメント名を","で区切ったもの
+UserName | string | true | ユーザ名
+Date | string | true | 日付
 
  **レスポンス200応答**
  ```
