@@ -27,7 +27,7 @@ func GetDiaryInfo(c *gin.Context){
 	params := req.URL.Query()
 
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
-	
+
 	query := "SELECT diaries.diary_id, diaries.title, diaries.writer_id, users.user_name, diaries.description, diaries.diary_body, " +
 			"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
 			"FROM diaries INNER JOIN users ON diaries.writer_id=users.user_id WHERE diaries.target_date "
@@ -62,9 +62,9 @@ func GetDiaryInfo(c *gin.Context){
 
 		startDate = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 		endDate = startDate
-		
+
 	}else if(containAll(params, [] string{"year", "month"})){
-		//検索期間が1ヶ月	
+		//検索期間が1ヶ月
 		year, _ := extractNum(params["year"][0])
 		month, _ := extractNum(params["month"][0])
 
@@ -109,7 +109,7 @@ func GetDiaryInfo(c *gin.Context){
 		panic(err.Error())
 	}
 	defer rows.Close()
-	
+
 	fmt.Println(rows)
 
 	//レスポンスと同型の構造体配列diariesの生成
@@ -119,7 +119,7 @@ func GetDiaryInfo(c *gin.Context){
 		nd := db.NullableDiaryWithWriterName{}
 		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, &nd.WriterName,
 			&nd.Description, &nd.DiaryBody, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
-		
+
 		//dに日記情報を格納
 		d := db.DiaryWithWriterName{
 			DiaryId: nd.DiaryId,
@@ -180,9 +180,9 @@ func PostDiaryInfo(c *gin.Context){
 	updateDate := nowTime.Format(layoutYMDHMS)
 
 	//queryにvalueを埋め込む
-	queryWithParam := fmt.Sprintf(query, diary_id, Request.Title, Request.Description, Request.DiaryBody, Request.ThumbnailBody, 
+	queryWithParam := fmt.Sprintf(query, diary_id, Request.Title, Request.Description, Request.DiaryBody, Request.ThumbnailBody,
 						writer_id, Request.TargetDate, updateDate)
-	
+
 	//クエリの実行
 	fmt.Println("[Query] ", queryWithParam)
 	_, err1 := dbIns.Exec(queryWithParam)
@@ -210,7 +210,7 @@ func GetUserInfo(c *gin.Context){
 	//クエリを作成
 	query := `SELECT user_name FROM users WHERE user_id="%s" ;`
 	queryWithParam := fmt.Sprintf(query, user_id)
-	
+
 	//クエリを実行
 	dbIns := db.GetDB()
 	rows, _ := dbIns.Query(queryWithParam)
@@ -247,7 +247,7 @@ func PostUserInfo(c * gin.Context){
 	fmt.Println(queryWithParams)
 
 	//DBインスタンスの取得
-	dbIns := db.GetDB()	
+	dbIns := db.GetDB()
 	rows, _ := dbIns.Query(queryWithParams)
 
 	//既に同IDのユーザがいるかどうかの確認
@@ -255,13 +255,13 @@ func PostUserInfo(c * gin.Context){
 	for rows.Next(){
 		exist_f = true
 	}
-	
+
 	if(exist_f == false){
 		//IDの重複がなかった場合
 		insertQuery := `INSERT users (user_id, user_name, user_password) VALUES ("%s", "%s", "%s")`
 		insertQueryWithParams := fmt.Sprintf(insertQuery, user_id, user_name, user_password)
 		dbIns.Query(insertQueryWithParams)
-		
+
 		//リクエストそのままを200レスポンスで返す
 		c.JSON(http.StatusOK, Request)
 	}else{
@@ -284,7 +284,7 @@ func AuthUserInfo(c *gin.Context){
 	queryWithParams := fmt.Sprintf(query, user_id, user_password)
 
 	//DBインスタンスの取得
-	dbIns := db.GetDB()	
+	dbIns := db.GetDB()
 	rows, _ := dbIns.Query(queryWithParams)
 
 	//認証できたかどうかを表すフラグ
@@ -292,7 +292,7 @@ func AuthUserInfo(c *gin.Context){
 	for rows.Next(){
 		auth_f = true
 	}
-	
+
 	//認証ができた場合
 	if(auth_f){
 		session_id_uuid, err := uuid.NewRandom()
@@ -313,4 +313,50 @@ func AuthUserInfo(c *gin.Context){
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Your Account Not Found"})
 		return
 	}
+}
+
+func MakeDiary(c *gin.Context){
+	Request := MakeDiaryRequest{}
+	err := c.ShouldBindJSON(&Request)
+	fmt.Println("[Request] ", Request)
+	//unmarshalが失敗した場合、404を返す
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return;
+	}
+
+	action := Request.Action
+	element := Request.Element
+	user_name := Request.UserName
+	date := Request.Date
+
+	c.HTML(http.StatusOK, "pixi.js", gin.H{
+		"Action": action,
+		"Element": element,
+		"UserName": user_name,
+		"Date": date,
+	})
+	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
+	// 	"title": "Main website",
+	// })
+}
+
+func MakeDiaryGet(c *gin.Context){
+	req := c.Request
+	params := req.URL.Query()
+
+	action := params["Action"][0]
+	element := params["Element"][0]
+	user_name := params["UserName"][0]
+	date := params["Date"][0]
+
+	c.HTML(http.StatusOK, "pixi.js", gin.H{
+		"Action": action,
+		"Element": element,
+		"UserName": user_name,
+		"Date": date,
+	})
+	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
+	// 	"title": "Main website",
+	// })
 }

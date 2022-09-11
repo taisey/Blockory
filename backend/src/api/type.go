@@ -31,4 +31,9 @@ type PostUserInfoRequest struct{
 	UserPassword string
 }
 
-
+type MakeDiaryRequest struct{
+	Action string
+	Element string
+	UserName string
+	Date string
+}

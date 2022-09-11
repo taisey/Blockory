@@ -71,12 +71,19 @@ func main() {
 	//corsSetting(engine)
 	corsSettingAllPass(engine)
 
+	//テンプレートの設定
+	engine.LoadHTMLGlob("templates/*")
+
+	engine.Static("/img", "./img")
+	engine.Static("/assets", "./assets")
 	engine.GET("/", api.RootHandle)
 	engine.GET("/DiaryInfo", api.GetDiaryInfo)
 	engine.POST("/DiaryInfo", api.PostDiaryInfo)
 	engine.GET("/AuthUserInfo", api.AuthUserInfo)
 	engine.GET("/UserInfo", api.GetUserInfo)
 	engine.POST("/UserInfo", api.PostUserInfo)
+	engine.POST("/MakeDiary", api.MakeDiary)
+	engine.GET("/MakeDiary", api.MakeDiaryGet)
 	engine.Run(":8080")
 
 }
