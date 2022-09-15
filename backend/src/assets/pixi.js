@@ -1271,7 +1271,7 @@ for (let i = 0; i < 2; i++)
 await fadeOut(eff1Charactor);
 await fadeIn(eleCharactor);
 }
-(async function () {
+async function main (action, element, username, date) {
   // ここにコアな処理
   // ここにコアな処理
   // ここにコアな処理
@@ -1410,4 +1410,6 @@ for(let i = 0; i < action_l.length; i++)
 }
 console.log("record: stop");
 recorder.stop();
-}());
+};
+
+main(action, element, username, date);
