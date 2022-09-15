@@ -12,7 +12,8 @@ diary_id|CHAR(48)| PRIMARY KEY
 title|CHAR(16)|
 writer_id|CHAR(48)| NOT NULL
 description | TEXT | 
-diary_body | TEXT |
+diary_text | TEXT |
+diary_movie | BLOB |
 thumbnail_body | BLOB |
 target_date | DATE |
 update_date | DATETIME |

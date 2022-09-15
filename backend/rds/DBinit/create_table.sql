@@ -4,6 +4,7 @@ CREATE DATABASE BlockoryDB;
  CREATE TABLE IF NOT EXISTS `BlockoryDB`.`users`(
      `user_id` CHAR(48) NOT NULL COMMENT 'ユーザID',
      `user_name` CHAR(16) NOT NULL COMMENT 'ユーザ名',
+     `user_password` CHAR(16) NOT NULL COMMENT 'パスワード',
      PRIMARY KEY (`user_id`));
 
  CREATE TABLE IF NOT EXISTS `BlockoryDB`.`diaries`(
@@ -11,7 +12,8 @@ CREATE DATABASE BlockoryDB;
      `title` CHAR(16) ,
      `writer_id` CHAR(48) NOT NULL,
      `description` TEXT,
-     `diary_body` TEXT,	
+     `diary_text` TEXT,	
+     `diary_movie` BLOB,
      `thumbnail_body` BLOB,
      `target_date` DATE,
      `update_date` DATETIME,
