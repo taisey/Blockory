@@ -330,7 +330,7 @@ func MakeDiary(c *gin.Context){
 	user_name := Request.UserName
 	date := Request.Date
 
-	c.HTML(http.StatusOK, "pixi.js", gin.H{
+	c.HTML(http.StatusOK, "diaryMovie.html", gin.H{
 		"Action": action,
 		"Element": element,
 		"UserName": user_name,
@@ -350,7 +350,7 @@ func MakeDiaryGet(c *gin.Context){
 	user_name := params["UserName"][0]
 	date := params["Date"][0]
 
-	c.HTML(http.StatusOK, "pixi.js", gin.H{
+	c.HTML(http.StatusOK, "diaryMovie.html", gin.H{
 		"Action": action,
 		"Element": element,
 		"UserName": user_name,
@@ -359,4 +359,9 @@ func MakeDiaryGet(c *gin.Context){
 	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
 	// 	"title": "Main website",
 	// })
+}
+
+func SaveMovie(c *gin.Context){
+	//リクエストそのままを200レスポンスで返す
+	c.String(http.StatusOK, "uploaded")
 }

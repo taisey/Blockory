@@ -84,6 +84,7 @@ func main() {
 	engine.POST("/UserInfo", api.PostUserInfo)
 	engine.POST("/MakeDiary", api.MakeDiary)
 	engine.GET("/MakeDiary", api.MakeDiaryGet)
+	engine.POST("/SaveMovie", api.SaveMovie)
 	engine.Run(":8080")
 
 }
