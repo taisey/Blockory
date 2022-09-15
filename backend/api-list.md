@@ -231,19 +231,22 @@ html??
 
 ## 日記動画保存　POST /SaveDiaryMovie
 日記動画を保存する
+
  **リクエスト**
  ```
  {
-  UserName:"ユーザ名"
-  Date:"yyyy-mm-dd"
-  DiaryMovie:"日記動画" 
+  UserId:"ユーザid",
+  UserName:"ユーザ名",
+  TargetDate:"yyyy-mm-dd",
+  DiaryMovie:"日記動画"
  }
  ```
  日記動画情報：
  フィールド名 | 型 | 必須 | 説明
  -- | -- | -- | --
+UserId | string | true | ユーザid
 UserName | string | true | ユーザ名
-Date | string | true | 日付
+TargetDate | string | true | 作成した日記の日付
 DiaryMovie | blob | true | 日記動画
 
  **レスポンス200応答**
