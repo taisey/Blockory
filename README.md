@@ -19,3 +19,8 @@ http://localhost:8080
 cd ./local
 bash runAll.sh
 ```
+
+## 本番環境
+ ```
+ 54.238.69.92
+ ```
