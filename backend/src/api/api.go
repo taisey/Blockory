@@ -373,7 +373,7 @@ func SaveDiaryMovie(c *gin.Context) {
 	user_id := Request.UserId
 	user_name := Request.UserName
 	target_date := Request.TargetDate
-	diary_movie := Request.DiaryMovie
+	diary_movie, _, _ := c.Request.FormFile("DiaryMovie")
 
 	diary_id_uuid, _ := uuid.NewRandom()
 
