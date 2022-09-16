@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Thumbnail Creator</title>
+</head>
+<body id="body">
+
+<input id="input" type="file" accept="video/*">
+<video id="video" width="640" height="480" controls></video>
+<svg id="svg" width="640" height="480" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <image id="image" width="1280" height="720" href="" />
+  <g id="g" />
+</svg>
+<textarea id="textarea" style="width:1280px;height:6rem;white-space:nowrap;padding:3px;" placeholder="SVG"></textarea><br>
+<button id="button">save</button>
+<p style="text-align:right"><a href="https://gist.github.com/worldace/29900cf73dcafa971e4b2de3e2e2cb9c" target="_blank">sourse</p>
+<script>
+    let json = {
+        "UserId" : "test1",
+        "TargetDate": "2022-09-16"
+    }
+</script>
+<script src = "./make_thumbnail.js">
+</script>
+
+</body>
+</html>
