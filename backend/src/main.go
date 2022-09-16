@@ -59,7 +59,7 @@ func main() {
 		password := os.Args[3]
 		host := os.Args[4]
 		databaseName := os.Args[5]
-		redis.InitProd()
+		//redis.InitProd()
 		db.InitProd(userName, password, host, databaseName)
 	}	
 	dbInstance := db.GetDB()
