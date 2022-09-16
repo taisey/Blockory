@@ -129,7 +129,7 @@ func GetDiaryInfo(c *gin.Context) {
 			Description:   nd.Description.String,
 			DiaryMovie:    nd.DiaryMovie,
 			DiaryText:     nd.DiaryText.String,
-			ThumbnailBody: nd.ThumbnailBody.String,
+			ThumbnailBody: nd.ThumbnailBody,
 			TargetDate:    nd.TargetDate,
 			UpdateDate:    nd.UpdateDate,
 		}
