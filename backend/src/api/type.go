@@ -52,10 +52,10 @@ type MakeDiaryMovieRequest struct{
 }
 
 type SaveDiaryMovieRequest struct{
-	UserId string
-	UserName string
-	TargetDate string
-	DiaryMovie []byte
+	UserId string `form:"UserId"`
+	UserName string `form:"UserName"`
+	TargetDate string `form:"TargetDate"`
+	DiaryMovie []byte `form:"DiaryMovie"`
 }
 type SaveDiaryInfoRequest struct{
 	DiaryId string

@@ -364,12 +364,10 @@ func MakeDiaryGet(c *gin.Context) {
 //[todo]動画の上書きを実現したい
 func SaveDiaryMovie(c *gin.Context) {
 	Request := SaveDiaryMovieRequest{}
-	err := c.ShouldBindJSON(&Request)
-	fmt.Println("[Request] ", Request)
-	//unmarshalが失敗した場合、404を返す
+	// ファイル以外のリクエストの値をバインド
+	err := c.Bind(&Request)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		c.Status(http.StatusBadRequest)
 	}
 
 	user_id := Request.UserId
