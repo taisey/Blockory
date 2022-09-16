@@ -280,7 +280,7 @@ func AuthUserInfo(c *gin.Context) {
 	user_password := params["UserPassword"][0]
 
 	//user_idとuser_passwordを照合する
-	query := `SELECT * FROM users WHERE user_id="%s" AND user_password="%s"`
+	query := `SELECT * FROM users WHERE user_id="%s" AND user_password="%s";`
 	queryWithParams := fmt.Sprintf(query, user_id, user_password)
 
 	//DBインスタンスの取得
