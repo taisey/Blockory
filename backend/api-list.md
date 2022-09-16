@@ -260,3 +260,31 @@ DiaryMovie | blob | true | 日記動画
  { 
  }
  ```
+
+## 日記情報保存 POST /SaveDiaryInfo
+日記情報を保存する
+ **リクエスト**
+ ```
+ {
+  DiaryId:"日記id",
+  Title:"日記のタイトル",
+  Description:"日記の説明",
+  DiaryText:"日記文",
+  Thumbnail:"サムネイル",
+ }
+ ```
+ 
+  日記情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+DiaryId | string | true | 日記id
+Title | string | true | 日記タイトル
+Description| string | true | 日記の説明
+DiaryText | string | true |  日記文
+Thumbnail | blob | true |  サムネイル画像
+  **レスポンス**
+ ```
+ {
+  DiaryId:"日記id"
+ }
+ ```
