@@ -378,7 +378,7 @@ func SaveDiaryMovie(c *gin.Context) {
 	diary_id_uuid, _ := uuid.NewRandom()
 
 	diary_id := diary_id_uuid.String()
-	query := `INSERT diaries (diary_id, user_id, target_date, diary_movie) VALUES("%s", "%s", "%s");`
+	query := `INSERT diaries (diary_id, user_id, target_date, diary_movie) VALUES("%s", "%s", "%s", "%s");`
 	queryWithParams := fmt.Sprintf(query, diary_id, user_id, user_name, target_date, diary_movie)
 
 	//DBインスタンスの取得
