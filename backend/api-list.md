@@ -6,7 +6,8 @@
 ユーザー情報取得 | GET |UserInfo
 ユーザー登録 | POST | UserInfo
 ユーザー認証 | GET | AuthUserInfo
-日記生成　| POST | MakeDiary
+日記動画生成　| POST | MakeDiaryMovie
+日記動画保存　| POST | SaveDiaryMovie
 
 
 ## 各APIの仕様
@@ -199,7 +200,7 @@ UserPassword | string | true | ユーザパスワード
  }
  ```
  
- ## 日記生成　POST /MakeDiary
+ ## 日記動画生成　POST /MakeDiaryMovie
  日記コードをもとに日記動画を生成する
  **リクエスト**
  ```
@@ -228,3 +229,34 @@ html??
  }
  ```
 
+## 日記動画保存　POST /SaveDiaryMovie
+日記動画を保存する
+
+ **リクエスト**
+ ```
+ {
+  UserId:"ユーザid",
+  UserName:"ユーザ名",
+  TargetDate:"yyyy-mm-dd",
+  DiaryMovie:"日記動画"
+ }
+ ```
+ 日記動画情報：
+ フィールド名 | 型 | 必須 | 説明
+ -- | -- | -- | --
+UserId | string | true | ユーザid
+UserName | string | true | ユーザ名
+TargetDate | string | true | 作成した日記の日付
+DiaryMovie | blob | true | 日記動画
+
+ **レスポンス200応答**
+ ```
+{
+ DiaryId: "日記id"
+}
+ ```
+  **レスポンス400応答**
+ ```
+ { 
+ }
+ ```
