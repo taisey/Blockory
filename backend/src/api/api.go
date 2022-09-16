@@ -1,14 +1,15 @@
 package api
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"fmt"
-	"time"
-	"strconv"
+	"log"
 	"mypkg/db"
 	"mypkg/redis"
-	"log"
+	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	//"encoding/json"
 	//"os"
@@ -21,40 +22,40 @@ func RootHandle(c *gin.Context) {
 	})
 }
 
-func GetDiaryInfo(c *gin.Context){
+func GetDiaryInfo(c *gin.Context) {
 	//リクエストをディクショナリにする
 	req := c.Request
 	params := req.URL.Query()
 
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 
-	query := "SELECT diaries.diary_id, diaries.title, diaries.writer_id, users.user_name, diaries.description, diaries.diary_body, " +
-			"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
-			"FROM diaries INNER JOIN users ON diaries.writer_id=users.user_id WHERE diaries.target_date "
-	querySortOption :=  ` ORDER BY diaries.target_date asc, users.user_name asc;`
+	query := "SELECT diaries.diary_id, diaries.title, diaries.user_id, users.user_name, diaries.description, diaries.diary_movie, diaries.diary_text" +
+		"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
+		"FROM diaries INNER JOIN users ON diaries.user_id=users.user_id WHERE diaries.target_date "
+	querySortOption := ` ORDER BY diaries.target_date asc, users.user_name asc;`
 	//リストが特定の要素を全て含むか確認する関数
-	containAll := func (list map[string][]string, elements []string) bool {
-		for _, element := range(elements){
-			if _, ok := list[element]; ok{
+	containAll := func(list map[string][]string, elements []string) bool {
+		for _, element := range elements {
+			if _, ok := list[element]; ok {
 				continue
-			}else{
+			} else {
 				return false
 			}
 		}
 		return true
 	}
 
-	//文字列をint型に変換（ExtractNum）　
+	//文字列をint型に変換（ExtractNum）
 	extractNum := strconv.Atoi
 
 	//検索範囲の先頭と末尾
-	var(
+	var (
 		startDate time.Time
-		endDate time.Time
+		endDate   time.Time
 	)
 
 	//year, month, dayを含むかどうかで場合わけ
-	if(containAll(params, [] string{"year", "month", "day"})){
+	if containAll(params, []string{"year", "month", "day"}) {
 		//検索期間が1日
 		year, _ := extractNum(params["year"][0])
 		month, _ := extractNum(params["month"][0])
@@ -63,7 +64,7 @@ func GetDiaryInfo(c *gin.Context){
 		startDate = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
 		endDate = startDate
 
-	}else if(containAll(params, [] string{"year", "month"})){
+	} else if containAll(params, []string{"year", "month"}) {
 		//検索期間が1ヶ月
 		year, _ := extractNum(params["year"][0])
 		month, _ := extractNum(params["month"][0])
@@ -71,7 +72,7 @@ func GetDiaryInfo(c *gin.Context){
 		startDate = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
 		endDate = startDate.AddDate(0, 1, -1)
 
-	}else if(containAll(params, [] string{"year"})){
+	} else if containAll(params, []string{"year"}) {
 		//検索期間が1年
 		year, _ := extractNum(params["year"][0])
 
@@ -87,14 +88,13 @@ func GetDiaryInfo(c *gin.Context){
 	//queryを生成
 	between := fmt.Sprintf(`BETWEEN '%s' AND '%s'`, startDateStr, endDateStr)
 
-
-	if(containAll(params, [] string{"writerId"})){
+	if containAll(params, []string{"UserId"}) {
 		//クエリにuserIdを含む場合
-		user_id := params["writerId"][0]
-		userIdQuery := ` AND writer_id="%s" `
+		user_id := params["UserId"][0]
+		userIdQuery := ` AND user_id="%s" `
 		userIdQueryWithParams := fmt.Sprintf(userIdQuery, user_id)
 		query = query + between + userIdQueryWithParams
-	}else{
+	} else {
 		//クエリにuserIdを含まない場合
 		query = query + between + querySortOption
 	}
@@ -105,7 +105,7 @@ func GetDiaryInfo(c *gin.Context){
 
 	//検索結果をrowsに格納
 	rows, err := dbIns.Query(query)
-	if(err != nil){
+	if err != nil {
 		panic(err.Error())
 	}
 	defer rows.Close()
@@ -114,25 +114,26 @@ func GetDiaryInfo(c *gin.Context){
 
 	//レスポンスと同型の構造体配列diariesの生成
 	diaries := []db.DiaryWithWriterName{}
-	for rows.Next(){
+	for rows.Next() {
 		//Nullを許す構造体ndを生成
 		nd := db.NullableDiaryWithWriterName{}
-		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.WriterId, &nd.WriterName,
-			&nd.Description, &nd.DiaryBody, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
+		err := rows.Scan(&nd.DiaryId, &nd.Title, &nd.UserId, &nd.WriterName,
+			&nd.Description, &nd.DiaryMovie, &nd.DiaryText, &nd.ThumbnailBody, &nd.TargetDate, &nd.UpdateDate)
 
 		//dに日記情報を格納
 		d := db.DiaryWithWriterName{
-			DiaryId: nd.DiaryId,
-			Title: nd.Title.String,
-			WriterId: nd.WriterId,
-			WriterName: nd.WriterName,
-			Description: nd.Description.String,
-			DiaryBody: nd.DiaryBody.String,
+			DiaryId:       nd.DiaryId,
+			Title:         nd.Title.String,
+			UserId:        nd.UserId,
+			WriterName:    nd.WriterName,
+			Description:   nd.Description.String,
+			DiaryMovie:    nd.DiaryMovie,
+			DiaryText:     nd.DiaryText.String,
 			ThumbnailBody: nd.ThumbnailBody.String,
-			TargetDate: nd.TargetDate,
-			UpdateDate: nd.UpdateDate,
+			TargetDate:    nd.TargetDate,
+			UpdateDate:    nd.UpdateDate,
 		}
-		if err != nil{
+		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Println(d)
@@ -142,35 +143,35 @@ func GetDiaryInfo(c *gin.Context){
 
 	response := GetDiaryInfoResponse{
 		DiaryCount: len(diaries),
-		Diaries: diaries,
+		Diaries:    diaries,
 	}
 	c.JSON(http.StatusOK, response)
 }
 
-func PostDiaryInfo(c *gin.Context){
+func PostDiaryInfo(c *gin.Context) {
 	Request := PostDiaryInfoRequest{}
 	err := c.ShouldBindJSON(&Request)
 
 	fmt.Println("[Request] ", Request)
 	//unmarshalが失敗した場合、404を返す
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return;
+		return
 	}
 
 	//diariesテーブルへのINSERT文
-	query := `INSERT diaries (diary_id, title, description, diary_body, thumbnail_body, writer_id, target_date, update_date) ` +
-			`VALUES("%s", "%s", "%s", "%s", "%s","%s", "%s", "%s");`
+	query := `INSERT diaries (diary_id, title, description, diary_body, thumbnail_body, user_id, target_date, update_date) ` +
+		`VALUES("%s", "%s", "%s", "%s", "%s","%s", "%s", "%s");`
 	dbIns := db.GetDB()
 
-	//[TODO]CookieのセッションIDからwriterIdを持ってくる
-	writer_id := "testWriterId0"
+	//[TODO]CookieのセッションIDからUserIdを持ってくる
+	user_id := "testUserId0"
 
 	//diary_idをuuidで生成する
 	diary_id, err := uuid.NewRandom()
 	if err != nil {
-			fmt.Println(err)
-			return
+		fmt.Println(err)
+		return
 	}
 
 	//update_dateを生成する
@@ -181,7 +182,7 @@ func PostDiaryInfo(c *gin.Context){
 
 	//queryにvalueを埋め込む
 	queryWithParam := fmt.Sprintf(query, diary_id, Request.Title, Request.Description, Request.DiaryBody, Request.ThumbnailBody,
-						writer_id, Request.TargetDate, updateDate)
+		user_id, Request.TargetDate, updateDate)
 
 	//クエリの実行
 	fmt.Println("[Query] ", queryWithParam)
@@ -191,17 +192,17 @@ func PostDiaryInfo(c *gin.Context){
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 	//200を返す
-	//[TODO]Request + writer_id + writer_name + diary_id + update_dateをレスポンスとして返したい
+	//[TODO]Request + user_id + writer_name + diary_id + update_dateをレスポンスとして返したい
 	c.JSON(http.StatusOK, Request)
 }
 
-func GetUserInfo(c *gin.Context){
+func GetUserInfo(c *gin.Context) {
 	//HeaderからSessionIdを入手
-	session_id:= c.Request.Header.Get("SessionId")
+	session_id := c.Request.Header.Get("SessionId")
 
 	//redisからUserIdを取得
-	user_id, err:= redis.Get(session_id)
-	if(err != nil){
+	user_id, err := redis.Get(session_id)
+	if err != nil {
 		//UserIdの取得に失敗したとき
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Your SessionId is invalid"})
 		return
@@ -215,25 +216,24 @@ func GetUserInfo(c *gin.Context){
 	dbIns := db.GetDB()
 	rows, _ := dbIns.Query(queryWithParam)
 
-
 	//レスポンスを作成
 	response := GetUserInfoResponse{UserId: user_id}
-	for rows.Next(){
+	for rows.Next() {
 		rows.Scan(&response.UserName)
 	}
 	c.JSON(http.StatusOK, response)
 	return
 }
 
-func PostUserInfo(c * gin.Context){
+func PostUserInfo(c *gin.Context) {
 	Request := PostUserInfoRequest{}
 	err := c.ShouldBindJSON(&Request)
 
 	fmt.Println("[Request] ", Request)
 	//unmarshalが失敗した場合、404を返す
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return;
+		return
 	}
 
 	user_id := Request.UserId
@@ -252,11 +252,11 @@ func PostUserInfo(c * gin.Context){
 
 	//既に同IDのユーザがいるかどうかの確認
 	exist_f := false
-	for rows.Next(){
+	for rows.Next() {
 		exist_f = true
 	}
 
-	if(exist_f == false){
+	if exist_f == false {
 		//IDの重複がなかった場合
 		insertQuery := `INSERT users (user_id, user_name, user_password) VALUES ("%s", "%s", "%s")`
 		insertQueryWithParams := fmt.Sprintf(insertQuery, user_id, user_name, user_password)
@@ -264,14 +264,14 @@ func PostUserInfo(c * gin.Context){
 
 		//リクエストそのままを200レスポンスで返す
 		c.JSON(http.StatusOK, Request)
-	}else{
+	} else {
 		//IDの重複があった場合
 		//400レスポンスを返す
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Your UserId Is Already Used"})
 	}
 }
 
-func AuthUserInfo(c *gin.Context){
+func AuthUserInfo(c *gin.Context) {
 	//リクエストをディクショナリにする
 	req := c.Request
 	params := req.URL.Query()
@@ -289,16 +289,16 @@ func AuthUserInfo(c *gin.Context){
 
 	//認証できたかどうかを表すフラグ
 	auth_f := false
-	for rows.Next(){
+	for rows.Next() {
 		auth_f = true
 	}
 
 	//認証ができた場合
-	if(auth_f){
+	if auth_f {
 		session_id_uuid, err := uuid.NewRandom()
 		if err != nil {
-				fmt.Println(err)
-				return
+			fmt.Println(err)
+			return
 		}
 		session_id := session_id_uuid.String()
 
@@ -308,21 +308,21 @@ func AuthUserInfo(c *gin.Context){
 		//レスポンスの作成
 		response := AuthUserInfoResponse{SessionId: session_id}
 		c.JSON(http.StatusOK, response)
-	}else{
+	} else {
 		//認証ができない場合
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Your Account Not Found"})
 		return
 	}
 }
 
-func MakeDiary(c *gin.Context){
-	Request := MakeDiaryRequest{}
+func MakeDiaryMovie(c *gin.Context) {
+	Request := MakeDiaryMovieRequest{}
 	err := c.ShouldBindJSON(&Request)
 	fmt.Println("[Request] ", Request)
 	//unmarshalが失敗した場合、404を返す
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return;
+		return
 	}
 
 	action := Request.Action
@@ -331,17 +331,17 @@ func MakeDiary(c *gin.Context){
 	date := Request.Date
 
 	c.HTML(http.StatusOK, "diaryMovie.html", gin.H{
-		"Action": action,
-		"Element": element,
+		"Action":   action,
+		"Element":  element,
 		"UserName": user_name,
-		"Date": date,
+		"Date":     date,
 	})
 	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
 	// 	"title": "Main website",
 	// })
 }
 
-func MakeDiaryGet(c *gin.Context){
+func MakeDiaryGet(c *gin.Context) {
 	req := c.Request
 	params := req.URL.Query()
 
@@ -351,17 +351,114 @@ func MakeDiaryGet(c *gin.Context){
 	date := params["Date"][0]
 
 	c.HTML(http.StatusOK, "diaryMovie.html", gin.H{
-		"Action": action,
-		"Element": element,
+		"Action":   action,
+		"Element":  element,
 		"UserName": user_name,
-		"Date": date,
+		"Date":     date,
 	})
 	// c.HTML(http.StatusOK, "index.tmpl", gin.H{
 	// 	"title": "Main website",
 	// })
 }
 
-func SaveMovie(c *gin.Context){
+//[todo]動画の上書きを実現したい
+func SaveDiaryMovie(c *gin.Context) {
+	Request := SaveDiaryMovieRequest{}
+	err := c.ShouldBindJSON(&Request)
+	fmt.Println("[Request] ", Request)
+	//unmarshalが失敗した場合、404を返す
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user_id := Request.UserId
+	user_name := Request.UserName
+	target_date := Request.TargetDate
+	diary_movie := Request.DiaryMovie
+
+	diary_id_uuid, _ := uuid.NewRandom()
+
+	diary_id := diary_id_uuid.String()
+	query := `INSERT diaries (diary_id, user_id, target_date, diary_movie) VALUES("%s", "%s", "%s");`
+	queryWithParams := fmt.Sprintf(query, diary_id, user_id, user_name, target_date, diary_movie)
+
+	//DBインスタンスの取得
+	dbIns := db.GetDB()
+
+	//クエリの実行
+	fmt.Println("[Query] ", queryWithParams)
+	_, err1 := dbIns.Exec(queryWithParams)
+	if err1 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	//レスポンスを作成
+	response := SaveDiaryMovieResponse{DiaryId: diary_id}
 	//リクエストそのままを200レスポンスで返す
-	c.String(http.StatusOK, "uploaded")
+	c.JSON(http.StatusOK, response)
+}
+
+func SaveDiaryInfo(c *gin.Context) {
+	Request := SaveDiaryInfoRequest{}
+	err := c.ShouldBindJSON(&Request)
+	fmt.Println("[Request] ", Request)
+	//unmarshalが失敗した場合、404を返す
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	diary_id := Request.DiaryId
+	title := Request.Title
+	description := Request.Description
+	diary_text := Request.DiaryText
+	thumbnail := Request.Thumbnail
+
+	query := `UPDATE diaries SET title="%s", description="%s", diary_text="%s", thumbnail="%s" WHERE diary_id="%s";`
+	queryWithParams := fmt.Sprintf(query, diary_id, title, description, diary_text, thumbnail)
+
+	//DBインスタンスの取得
+	dbIns := db.GetDB()
+
+	//クエリの実行
+	fmt.Println("[Query] ", queryWithParams)
+	_, err1 := dbIns.Exec(queryWithParams)
+	if err1 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	//レスポンスを作成
+	response := SaveDiaryInfoResponse{DiaryId: diary_id}
+	//リクエストそのままを200レスポンスで返す
+	c.JSON(http.StatusOK, response)
+}
+
+func GetDiaryMovie(c *gin.Context) {
+	Request := GetDiaryMovieRequest{}
+	err := c.ShouldBindJSON(&Request)
+	fmt.Println("[Request] ", Request)
+	//unmarshalが失敗した場合、404を返す
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	user_id := Request.UserId
+	target_date := Request.TargetDate
+
+	query := `SELECT diary_movie FROM diaries WHERE user_id="%s" AND target_date="%s";`
+	queryWithParams := fmt.Sprintf(query, user_id, target_date)
+
+	//DBインスタンスの取得
+	dbIns := db.GetDB()
+
+	var diary_movie []byte
+	//クエリの実行
+	fmt.Println("[Query] ", queryWithParams)
+	rows, err1 := dbIns.Query(queryWithParams)
+	if err1 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	for rows.Next() {
+		rows.Scan(&diary_movie)
+	}
+	//リクエストそのままを200レスポンスで返す
+	c.Data(http.StatusOK, "/video/webm", diary_movie)
 }

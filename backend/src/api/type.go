@@ -25,15 +25,47 @@ type AuthUserInfoResponse struct{
 	SessionId string
 }
 
+type SaveDiaryMovieResponse struct{
+	DiaryId string
+	UserId string
+	TargetDate string
+}
+
+type SaveDiaryInfoResponse struct{
+	DiaryId string
+}
+type GetDiaryMovieResponse struct{
+	DiaryMovie []byte
+}
+
 type PostUserInfoRequest struct{
 	UserId string
 	UserName string
 	UserPassword string
 }
 
-type MakeDiaryRequest struct{
+type MakeDiaryMovieRequest struct{
 	Action string
 	Element string
 	UserName string
 	Date string
+}
+
+type SaveDiaryMovieRequest struct{
+	UserId string
+	UserName string
+	TargetDate string
+	DiaryMovie []byte
+}
+type SaveDiaryInfoRequest struct{
+	DiaryId string
+	Title string
+	Description string
+	DiaryText string
+	Thumbnail []byte
+}
+
+type GetDiaryMovieRequest struct{
+	UserId string
+	TargetDate string
 }

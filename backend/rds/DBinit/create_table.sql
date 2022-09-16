@@ -10,11 +10,11 @@ CREATE DATABASE BlockoryDB;
  CREATE TABLE IF NOT EXISTS `BlockoryDB`.`diaries`(
      `diary_id` CHAR(48) COMMENT '日記ID',
      `title` CHAR(16) ,
-     `writer_id` CHAR(48) NOT NULL,
+     `user_id` CHAR(48),
      `description` TEXT,
      `diary_text` TEXT,	
-     `diary_movie` BLOB,
-     `thumbnail_body` BLOB,
+     `diary_movie` LONGBLOB,
+     `thumbnail_body` LONGBLOB,
      `target_date` DATE,
      `update_date` DATETIME,
      PRIMARY KEY (`diary_id`));

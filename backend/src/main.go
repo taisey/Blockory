@@ -82,9 +82,11 @@ func main() {
 	engine.GET("/AuthUserInfo", api.AuthUserInfo)
 	engine.GET("/UserInfo", api.GetUserInfo)
 	engine.POST("/UserInfo", api.PostUserInfo)
-	engine.POST("/MakeDiary", api.MakeDiary)
-	engine.GET("/MakeDiary", api.MakeDiaryGet)
-	engine.POST("/SaveMovie", api.SaveMovie)
+	engine.POST("/MakeDiaryMovie", api.MakeDiaryMovie)
+	engine.GET("/MakeDiaryMovie", api.MakeDiaryGet)
+	engine.POST("/SaveDiaryMovie", api.SaveDiaryMovie)
+	engine.POST("/SaveDiaryInfo", api.SaveDiaryInfo)
+	engine.POST("/GetDiaryMovie", api.GetDiaryMovie)
 	engine.Run(":8080")
 
 }
