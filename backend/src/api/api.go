@@ -29,7 +29,7 @@ func GetDiaryInfo(c *gin.Context) {
 
 	//[TODO]エラーハンドリング追加（paramsが存在するか、値が妥当か）
 
-	query := "SELECT diaries.diary_id, diaries.title, diaries.user_id, users.user_name, diaries.description, diaries.diary_movie, diaries.diary_text" +
+	query := "SELECT diaries.diary_id, diaries.title, diaries.user_id, users.user_name, diaries.description, diaries.diary_movie, diaries.diary_text," +
 		"diaries.thumbnail_body, diaries.target_date, diaries.update_date " +
 		"FROM diaries INNER JOIN users ON diaries.user_id=users.user_id WHERE diaries.target_date "
 	querySortOption := ` ORDER BY diaries.target_date asc, users.user_name asc;`
