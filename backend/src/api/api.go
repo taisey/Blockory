@@ -303,7 +303,7 @@ func AuthUserInfo(c *gin.Context) {
 		session_id := session_id_uuid.String()
 
 		//redisに登録
-		redis.Set(session_id, user_id)
+		//redis.Set(session_id, user_id)
 
 		//レスポンスの作成
 		response := AuthUserInfoResponse{SessionId: session_id}
