@@ -8,7 +8,8 @@
 ユーザー認証 | GET | AuthUserInfo
 日記動画生成　| POST | MakeDiaryMovie
 日記動画保存　| POST | SaveDiaryMovie
-
+日記情報保存　| POST | SaveDiaryInfo
+日記動画取得  | POST | GetDiaryMovie 
 
 ## 各APIの仕様
 
@@ -50,10 +51,11 @@ day|number|false|一覧表示する日記の作成日
     {
       DiaryId:"日記ID",
       Title: "日記タイトル",
-      WriterId: "日記作者ID",
-      WriterName:  "日記作者名前",
+      UserId: "日記作者ID",
+      UserName:  "日記作者名前",
       Description: "日記の説明",
-      DiaryBody: "日記コード",
+      DiaryMovie: "日記コード",
+      DiaryText: "日記文",
       ThumbnailBody: "サムネイル本体",
       TargetDate:"yyyy-mm-dd",
       UpdateDate:"yyyy-mm-dd",
@@ -71,10 +73,11 @@ Diaries|日記情報配列|true|一覧表示するための日記情報の配列
  -- | -- | -- | --
 DiaryId | string | true | 日記ID
 Title | string | false | 日記タイトル
-WriterId | string | true | 日記作者ID
-WriterName | string | false | 日記作者名前
+UserId | string | true | 日記作者ID
+USerName | string | false | 日記作者名前
 Description | string | false | 日記の説明
-DiaryBody | string | true | 日記コード
+DiaryMovie | string | true | 日記コード
+DiaryText | string | true | 日記文
 ThumbnailBody | string | false | サムネイル画像をbase64でエンコードした文字列
 TargetDate | date | true | 日記の日付
 UpdateDate | date | true | 最後に更新した日付
