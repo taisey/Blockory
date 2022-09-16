@@ -38,7 +38,7 @@ type NullableDiaryWithWriterName struct {
 	Description   sql.NullString
 	DiaryText     sql.NullString
 	DiaryMovie     []byte
-	ThumbnailBody sql.NullString
+	ThumbnailBody []byte
 	TargetDate    string
 	UpdateDate    string
 }
@@ -62,7 +62,7 @@ type DiaryWithWriterName struct {
 	Description   string
 	DiaryText     string
 	DiaryMovie	  []byte
-	ThumbnailBody string
+	ThumbnailBody []byte
 	TargetDate    string
 	UpdateDate    string
 }
