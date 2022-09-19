@@ -1,0 +1,13 @@
+[Unit]
+Description=<任意の説明>
+After=network.target
+
+[Service]
+Type=simple
+Group=root
+User=root
+WorkingDirectory=/home/ec2-user/Blockory/cmd
+ExecStart=/usr/bin/bash /home/ec2-user/Blockory/cmd/runProd.sh 
+Restart = always
+[Install]
+WantedBy=multi-user.target
