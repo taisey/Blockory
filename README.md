@@ -20,7 +20,8 @@ cd ./local
 bash runAll.sh
 ```
 
-## 本番環境
+## 本番環境（SSL対応）
  ```
- 54.238.69.92
+http://www.blockory-server.xyz
+https://www.blockory-server.xyz
  ```
